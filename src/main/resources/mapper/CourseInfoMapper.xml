@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.xiaoyuu.inwust.dao.CourseInfoMapper">
+    <resultMap id="BaseResultMap" type="me.xiaoyuu.inwust.model.CourseInfo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="course_code" jdbcType="VARCHAR" property="courseCode"/>
+        <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
+        <result column="course_credit" jdbcType="DECIMAL" property="courseCredit"/>
+        <result column="course_hour" jdbcType="INTEGER" property="courseHour"/>
+        <result column="course_type" jdbcType="INTEGER" property="courseType"/>
+        <result column="course_type_name" jdbcType="VARCHAR" property="courseTypeName"/>
+        <result column="teacher_name" jdbcType="VARCHAR" property="teacherName"/>
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insertOneWithIgnore" parameterType="me.xiaoyuu.inwust.model.CourseInfo">
+        insert ignore into inwust.course_info(course_code, course_name, course_credit, course_hour, course_type,
+                                              course_type_name, teacher_name, unit_name)
+        VALUES (#{courseInfo.courseCode}, #{courseInfo.courseName}, #{courseInfo.courseCredit},
+                #{courseInfo.courseHour}, #{courseInfo.courseType}, #{courseInfo.courseTypeName},
+                #{courseInfo.teacherName}, #{courseInfo.unitName})
+    </insert>
+
+    <insert id="insertAlltWithIgnore" parameterType="java.util.List">
+        insert ignore into inwust.course_info(course_code, course_name, course_credit, course_hour, course_type,
+        course_type_name, teacher_name, unit_name)
+        VALUES
+        <foreach collection="list" item="courseInfo" index="index" separator=",">
+           (#{courseInfo.courseCode}, #{courseInfo.courseName}, #{courseInfo.courseCredit},
+            #{courseInfo.courseHour}, #{courseInfo.courseType}, #{courseInfo.courseTypeName},
+            #{courseInfo.teacherName}, #{courseInfo.unitName})
+        </foreach>
+    </insert>
+
+    <select id="selectByCollegeCode" resultMap="BaseResultMap">
+        select id,
+               course_code,
+               course_name,
+               course_credit,
+               course_hour,
+               course_type,
+               course_type_name,
+               teacher_name,
+               unit_name,
+               create_time,
+               update_time
+        from inwust.course_info
+        where course_code like concat(#{collegeCode}, '%')
+    </select>
+
+    <select id="selectByCourseName" resultMap="BaseResultMap">
+        select id,
+               course_code,
+               course_name,
+               course_credit,
+               course_hour,
+               course_type,
+               course_type_name,
+               teacher_name,
+               unit_name,
+               create_time,
+               update_time
+        from inwust.course_info
+        where course_name like concat('%', #{keyword}, '%')
+    </select>
+
+    <select id="selectByTeacherName" resultMap="BaseResultMap">
+        select id,
+               course_code,
+               course_name,
+               course_credit,
+               course_hour,
+               course_type,
+               course_type_name,
+               teacher_name,
+               unit_name,
+               create_time,
+               update_time
+        from inwust.course_info
+        where teacher_name like concat('%', #{keyword}, '%')
+    </select>
+</mapper>
