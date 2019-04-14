@@ -45,14 +45,14 @@ public class CollegeInfo {
         return id;
     }
 
-    /**
-     * 设置id
-     *
-     * @param id id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
+//    /**
+//     * 设置id
+//     *
+//     * @param id id
+//     */
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
 
     /**
      * 获取学院代码
@@ -98,15 +98,15 @@ public class CollegeInfo {
     public Date getCreateTime() {
         return createTime;
     }
-
-    /**
-     * 设置创建时间
-     *
-     * @param createTime 创建时间
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+//
+//    /**
+//     * 设置创建时间
+//     *
+//     * @param createTime 创建时间
+//     */
+//    public void setCreateTime(Date createTime) {
+//        this.createTime = createTime;
+//    }
 
     /**
      * 获取修改时间
@@ -117,12 +117,24 @@ public class CollegeInfo {
         return updateTime;
     }
 
-    /**
-     * 设置修改时间
-     *
-     * @param updateTime 修改时间
-     */
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+//    /**
+//     * 设置修改时间
+//     *
+//     * @param updateTime 修改时间
+//     */
+//    public void setUpdateTime(Date updateTime) {
+//        this.updateTime = updateTime;
+//    }
+
+
+    @Override
+    public String toString() {
+        return "CollegeInfo{" +
+                "id=" + id +
+                ", collegeCode='" + collegeCode + '\'' +
+                ", collegeName='" + collegeName + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
     }
 }

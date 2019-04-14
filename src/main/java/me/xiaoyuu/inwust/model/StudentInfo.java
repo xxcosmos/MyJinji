@@ -13,12 +13,11 @@ public class StudentInfo {
         this.studentName = studentName;
     }
 
-    public StudentInfo(String studentId, String studentName, Integer collegeId, Integer majorId) {
-        this.studentId = studentId;
-        this.studentName = studentName;
-        this.collegeId = collegeId;
-        this.majorId = majorId;
-    }
+    /**
+     * 专业code
+     */
+    @Column(name = "major_code")
+    private String majorCode;
 
     /**
      * id
@@ -39,17 +38,13 @@ public class StudentInfo {
     @Column(name = "student_name")
     private String studentName;
 
-    /**
-     * 学院id
-     */
-    @Column(name = "college_id")
-    private Integer collegeId;
 
-    /**
-     * 专业id
-     */
-    @Column(name = "major_id")
-    private Integer majorId;
+    public StudentInfo(String studentId, String studentName, String majorCode) {
+        this.studentId = studentId;
+        this.studentName = studentName;
+
+        this.majorCode = majorCode;
+    }
 
     /**
      * 创建时间
@@ -72,14 +67,14 @@ public class StudentInfo {
         return id;
     }
 
-    /**
-     * 设置id
-     *
-     * @param id id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
+//    /**
+//     * 设置id
+//     *
+//     * @param id id
+//     */
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
 
     /**
      * 获取学号
@@ -118,39 +113,21 @@ public class StudentInfo {
     }
 
     /**
-     * 获取学院id
+     * 获取专业code
      *
-     * @return college_id - 学院id
+     * @return major_code - 专业code
      */
-    public Integer getCollegeId() {
-        return collegeId;
+    public String getMajorCode() {
+        return majorCode;
     }
 
     /**
-     * 设置学院id
+     * 设置专业code
      *
-     * @param collegeId 学院id
+     * @param majorCode 专业code
      */
-    public void setCollegeId(Integer collegeId) {
-        this.collegeId = collegeId;
-    }
-
-    /**
-     * 获取专业id
-     *
-     * @return major_id - 专业id
-     */
-    public Integer getMajorId() {
-        return majorId;
-    }
-
-    /**
-     * 设置专业id
-     *
-     * @param majorId 专业id
-     */
-    public void setMajorId(Integer majorId) {
-        this.majorId = majorId;
+    public void setMajorCode(String majorCode) {
+        this.majorCode = majorCode;
     }
 
     /**
@@ -162,14 +139,14 @@ public class StudentInfo {
         return createTime;
     }
 
-    /**
-     * 设置创建时间
-     *
-     * @param createTime 创建时间
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+//    /**
+//     * 设置创建时间
+//     *
+//     * @param createTime 创建时间
+//     */
+//    public void setCreateTime(Date createTime) {
+//        this.createTime = createTime;
+//    }
 
     /**
      * 获取修改时间
@@ -195,8 +172,7 @@ public class StudentInfo {
                 "id=" + id +
                 ", studentId='" + studentId + '\'' +
                 ", studentName='" + studentName + '\'' +
-                ", collegeId=" + collegeId +
-                ", majorId=" + majorId +
+                ", majorCode=" + majorCode +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';

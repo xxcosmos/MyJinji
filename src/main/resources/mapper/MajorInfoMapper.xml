@@ -6,7 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="college_id" jdbcType="INTEGER" property="collegeId" />
+    <result column="college_code" jdbcType="VARCHAR" property="collegeCode"/>
     <result column="major_code" jdbcType="VARCHAR" property="majorCode" />
     <result column="major_name" jdbcType="VARCHAR" property="majorName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />

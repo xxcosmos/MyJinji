@@ -65,7 +65,10 @@ public class StudentInfoController {
             return ResultGenerator.genSuccessResult(new StudentInfo("同名的有"+num+"个，请使用学号搜索。",""));
         }else if (num==1){
             StudentInfo studentInfo = studentInfoService.findBy("studentName",name);
-            return ResultGenerator.genSuccessResult(new StudentInfoVO(studentInfo,majorInfoService.findById(studentInfo.getMajorId()),collegeInfoService.findById(studentInfo.getCollegeId())));
+            MajorInfo majorInfo = majorInfoService.findBy("majorCode", studentInfo.getMajorCode());
+            CollegeInfo collegeInfo = collegeInfoService.findBy("collegeCode", majorInfo.getCollegeCode());
+
+            return ResultGenerator.genSuccessResult(new StudentInfoVO(studentInfo, majorInfo, collegeInfo));
         }else {
             return ResultGenerator.genFailResult("查询不到");
         }
@@ -79,7 +82,10 @@ public class StudentInfoController {
         if (studentInfo==null){
             return ResultGenerator.genFailResult("查询不到");
         }
-        return ResultGenerator.genSuccessResult(new StudentInfoVO(studentInfo,majorInfoService.findById(studentInfo.getMajorId()),collegeInfoService.findById(studentInfo.getCollegeId())));
+        MajorInfo majorInfo = majorInfoService.findBy("majorCode", studentInfo.getMajorCode());
+        CollegeInfo collegeInfo = collegeInfoService.findBy("collegeCode", majorInfo.getCollegeCode());
+
+        return ResultGenerator.genSuccessResult(new StudentInfoVO(studentInfo, majorInfo, collegeInfo));
     }
 
 //    @GetMapping

@@ -8,16 +8,15 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="student_id" jdbcType="VARCHAR" property="studentId" />
     <result column="student_name" jdbcType="VARCHAR" property="studentName" />
-    <result column="college_id" jdbcType="INTEGER" property="collegeId" />
-    <result column="major_id" jdbcType="INTEGER" property="majorId" />
+    <result column="major_code" jdbcType="VARCHAR" property="majorId"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
 
   <insert id="insertOneWithIgnore" parameterType="me.xiaoyuu.inwust.model.StudentInfo">
-    insert ignore into inwust.student_info(id, student_id, student_name, college_id, major_id)
+    insert ignore into inwust.student_info(id, student_id, student_name, major_code)
     VALUES (#{studentInfo.id}, #{studentInfo.studentId}, #{studentInfo.studentName},
-            #{studentInfo.collegeId}, #{studentInfo.majorId})
+            #{studentInfo.majorCode})
   </insert>
 
   <select id="isExistByStudentId" resultType="java.lang.Integer">

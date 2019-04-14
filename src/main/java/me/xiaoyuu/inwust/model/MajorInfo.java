@@ -13,10 +13,10 @@ public class MajorInfo {
     private Integer id;
 
     /**
-     * 学院id
+     * 学院code
      */
-    @Column(name = "college_id")
-    private Integer collegeId;
+    @Column(name = "college_code")
+    private String collegeCode;
 
     /**
      * 专业代码
@@ -50,32 +50,32 @@ public class MajorInfo {
     public Integer getId() {
         return id;
     }
+//
+//    /**
+//     * 设置id
+//     *
+//     * @param id id
+//     */
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
 
     /**
-     * 设置id
+     * 获取学院code
      *
-     * @param id id
+     * @return college_code - 学院code
      */
-    public void setId(Integer id) {
-        this.id = id;
+    public String getCollegeCode() {
+        return collegeCode;
     }
 
     /**
-     * 获取学院id
+     * 设置学院code
      *
-     * @return college_id - 学院id
+     * @param collegeCode 学院Code
      */
-    public Integer getCollegeId() {
-        return collegeId;
-    }
-
-    /**
-     * 设置学院id
-     *
-     * @param collegeId 学院id
-     */
-    public void setCollegeId(Integer collegeId) {
-        this.collegeId = collegeId;
+    public void setCollegeCode(String collegeCode) {
+        this.collegeCode = collegeCode;
     }
 
     /**
@@ -123,14 +123,14 @@ public class MajorInfo {
         return createTime;
     }
 
-    /**
-     * 设置创建时间
-     *
-     * @param createTime 创建时间
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+//    /**
+//     * 设置创建时间
+//     *
+//     * @param createTime 创建时间
+//     */
+//    public void setCreateTime(Date createTime) {
+//        this.createTime = createTime;
+//    }
 
     /**
      * 获取修改时间
