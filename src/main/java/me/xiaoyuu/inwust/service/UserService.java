@@ -4,7 +4,7 @@ import me.xiaoyuu.inwust.core.Service;
 
 
 /**
- * Created by xiaoyuu on 2019/04/10.
+ * Created by xiaoyuu on 2019/04/17.
  */
 public interface UserService extends Service<User> {
 

@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
-* Created by xiaoyuu on 2019/04/10.
+ * Created by xiaoyuu on 2019/04/17.
 */
 @RestController
 @RequestMapping("/user")
@@ -48,7 +48,7 @@ public class UserController {
     public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
         List<User> list = userService.findAll();
-        PageInfo pageInfo = new PageInfo(list);
+        PageInfo pageInfo = new PageInfo<>(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

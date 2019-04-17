@@ -6,20 +6,15 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="openid" jdbcType="VARCHAR" property="openid" />
+      <result column="gender" jdbcType="TINYINT" property="gender"/>
+      <result column="date_of_birth" jdbcType="TIMESTAMP" property="dateOfBirth"/>
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
-    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
-    <result column="gender" jdbcType="INTEGER" property="gender" />
-    <result column="city" jdbcType="VARCHAR" property="city" />
-    <result column="province" jdbcType="VARCHAR" property="province" />
+      <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber"/>
+      <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
+      <result column="openid" jdbcType="VARCHAR" property="openid"/>
+      <result column="status" jdbcType="TINYINT" property="status"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="like_num" jdbcType="INTEGER" property="likeNum" />
-    <result column="introduction" jdbcType="VARCHAR" property="introduction" />
-    <result column="real_name" jdbcType="VARCHAR" property="realName" />
-    <result column="student_id" jdbcType="VARCHAR" property="studentId" />
-    <result column="jwc_password" jdbcType="VARCHAR" property="jwcPassword" />
-    <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
-    <result column="status" jdbcType="INTEGER" property="status" />
+      <result column="deleted" jdbcType="BIT" property="deleted"/>
   </resultMap>
 </mapper>
