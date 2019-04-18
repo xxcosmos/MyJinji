@@ -1,88 +1,103 @@
 package me.xiaoyuu.inwust.utils;
 
+import me.xiaoyuu.inwust.dto.ImageUploadResponse;
+import me.xiaoyuu.inwust.dto.ImageUploadSuccessData;
+import me.xiaoyuu.inwust.model.StudentInfo;
+import me.xiaoyuu.inwust.model.StudentPic;
+import me.xiaoyuu.inwust.service.StudentInfoService;
+import me.xiaoyuu.inwust.service.StudentPicService;
 import me.xiaoyuu.inwust.utils.RestTemplate.RestTemplateUtil;
 import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CommonUtil {
+    private static final String imageURL = "http://jwxt.wust.edu.cn/whkjdx/uploadfile/studentphoto/pic/";
+    private static final String uploadURL = "https://sm.ms/api/upload";
+    @Resource
+    private static StudentPicService studentPicService;
+    @Resource
+    private static StudentInfoService studentInfoService;
+    private static RestTemplate restTemplate = RestTemplateUtil.getInstance();
 
-    private static String baseUrl = "http://jwxt.wust.edu.cn/whkjdx/uploadfile/studentphoto/pic/";
-    private static String basePath = "/Users/xiaoyuu/WUSTStudentPic/";
-
-    private static void saveFile(String pathName, String fileName, byte[] data) {
-        //判断文件夹是否存在
-        File path = new File(pathName);
-        if (!path.exists()) {
-            path.mkdirs();
+    private static File getPicture(String studentId) {
+        String url = imageURL + studentId + ".JPG";
+        //新建RestTemplate,将图片读入bytes中
+        ResponseEntity<byte[]> responseEntity = restTemplate.getForEntity(url, byte[].class);
+        File file = new File("/Users/xiaoyuu/IdeaProjects/my-springboot-seed-project/src/main/resources/temp-image.JPG");
+        byte[] bytes = responseEntity.getBody();
+        if (bytes == null) {
+            System.out.println("bytes is null");
+            return null;
         }
-        //判断文件是否存在
-        File file = new File(pathName + fileName);
 
         try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            //写入文件
-            OutputStream outputStream = new FileOutputStream(pathName + fileName);
-            outputStream.write(data);
-            outputStream.close();
+            OutputStream outputStream = new FileOutputStream(file);
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+            bufferedOutputStream.write(responseEntity.getBody());
+            return file;
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
+        return null;
     }
 
-    private static int getPicture(String studentId) {
-        String fileName = studentId + ".JPG";
-        String url = baseUrl + fileName;
-        String pathName = basePath + studentId.substring(4, 6) + "/" + studentId.substring(0, 4) + "/";
-        //新建RestTemplate,将图片读入bytes中
-        RestTemplate restTemplate = RestTemplateUtil.getInstance();
-        ResponseEntity<byte[]> responseEntity = restTemplate.getForEntity(url, byte[].class);
-        byte[] data = responseEntity.getBody();
-
-        if (data != null && responseEntity.getStatusCode().is2xxSuccessful()) {
-            saveFile(pathName, fileName, data);
-            return 0;
-        } else {
-            return 1;
-        }
+    private static ImageUploadResponse uploadImage(File file) {
+        FileSystemResource resource = new FileSystemResource(file);
+        MultiValueMap<String, Object> multiValueMap = new LinkedMultiValueMap<>();
+        multiValueMap.add("smfile", resource);
+        HttpHeaders headers = getHttpHeaders();
+        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(multiValueMap, headers);
+        return restTemplate.postForObject(uploadURL, httpEntity, ImageUploadResponse.class);
     }
 
-    public static void generator() {
-        String grade = "2017";
-        List<String> collegeCode = new ArrayList<>();
-        for (int i = 1; i <= 25; i++) {
-            collegeCode.add((i < 10) ? ("0" + i) : String.valueOf(i));
-        }
-        String major = "00-26";
-        String num = "001-500";
-
-
-
+    public static HttpHeaders getHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.ALL));
+        headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+        return headers;
     }
-
 
     public static void main(String[] args) {
-        getPicture("201913137042");
-//        String studentId ="201713137041";
-//        String pathName = " /Users/xiaoyuu/wustStudentPic/"+studentId.substring(4,6)+"/"+studentId.substring(0,4)+"/";
-//        File file = new File(pathName+studentId+".JPG");
-//        try {
-//            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
-//            int read = bufferedInputStream.read();
-//            System.out.println(read);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+        // List<StudentInfo> studentInfoList = studentInfoService.findAll();
+        List<StudentInfo> studentInfoList = new ArrayList<>();
+        StudentInfo studentInfo1 = new StudentInfo();
+        studentInfo1.setStudentId("201713137040");
+        studentInfoList.add(studentInfo1);
+
+        for (StudentInfo studentInfo : studentInfoList) {
+            String studentId = studentInfo.getStudentId();
+            File pic = getPicture(studentId);
+            if (pic == null) {
+                System.out.println("getFile Failed");
+                continue;
+            }
+
+            ImageUploadResponse response = uploadImage(pic);
+            System.out.println(response);
+            if ("success".equals(response.getCode())) {
+                //存数据到数据库中
+                ImageUploadSuccessData data = response.getData();
+                StudentPic studentPic = new StudentPic();
+                studentPic.setUrl(data.getUrl());
+                studentPic.setStudentId(studentId);
+                studentPic.setDeleteUrl(data.getDelete());
+                studentPic.setHash(data.getHash());
+                studentPicService.save(studentPic);
+            }
+
+
+        }
     }
+
+
 }
