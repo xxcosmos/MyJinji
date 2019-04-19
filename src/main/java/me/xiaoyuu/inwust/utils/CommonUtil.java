@@ -23,35 +23,26 @@ import java.util.List;
 public class CommonUtil {
     private static final String imageURL = "http://jwxt.wust.edu.cn/whkjdx/uploadfile/studentphoto/pic/";
     private static final String uploadURL = "https://sm.ms/api/upload";
-    @Resource
-    private static StudentPicService studentPicService;
-    @Resource
-    private static StudentInfoService studentInfoService;
-    private static RestTemplate restTemplate = RestTemplateUtil.getInstance();
 
-    private static File getPicture(String studentId) {
-        String url = imageURL + studentId + ".JPG";
-        //新建RestTemplate,将图片读入bytes中
+    public static byte[] getPicture(String studentId) {
+        String url = getStudentPicUrl(studentId);
+        RestTemplate restTemplate = RestTemplateUtil.getInstance();
         ResponseEntity<byte[]> responseEntity = restTemplate.getForEntity(url, byte[].class);
-        File file = new File("/Users/xiaoyuu/IdeaProjects/my-springboot-seed-project/src/main/resources/temp-image.JPG");
-        byte[] bytes = responseEntity.getBody();
-        if (bytes == null) {
-            System.out.println("bytes is null");
-            return null;
-        }
-
-        try {
-            OutputStream outputStream = new FileOutputStream(file);
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
-            bufferedOutputStream.write(responseEntity.getBody());
-            return file;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return responseEntity.getBody();
     }
 
-    private static ImageUploadResponse uploadImage(File file) {
+    public static String getStudentPicUrl(String studentId) {
+        return imageURL + studentId + ".JPG";
+    }
+
+    /**
+     * smms 上传文件
+     *
+     * @param file
+     * @return
+     */
+    public static ImageUploadResponse uploadImage(File file) {
+        RestTemplate restTemplate = RestTemplateUtil.getInstance();
         FileSystemResource resource = new FileSystemResource(file);
         MultiValueMap<String, Object> multiValueMap = new LinkedMultiValueMap<>();
         multiValueMap.add("smfile", resource);
@@ -60,44 +51,18 @@ public class CommonUtil {
         return restTemplate.postForObject(uploadURL, httpEntity, ImageUploadResponse.class);
     }
 
-    public static HttpHeaders getHttpHeaders() {
+    /**
+     * get Headers
+     *
+     * @return
+     */
+    private static HttpHeaders getHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.ALL));
         headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
         return headers;
     }
 
-    public static void main(String[] args) {
-        // List<StudentInfo> studentInfoList = studentInfoService.findAll();
-        List<StudentInfo> studentInfoList = new ArrayList<>();
-        StudentInfo studentInfo1 = new StudentInfo();
-        studentInfo1.setStudentId("201713137040");
-        studentInfoList.add(studentInfo1);
-
-        for (StudentInfo studentInfo : studentInfoList) {
-            String studentId = studentInfo.getStudentId();
-            File pic = getPicture(studentId);
-            if (pic == null) {
-                System.out.println("getFile Failed");
-                continue;
-            }
-
-            ImageUploadResponse response = uploadImage(pic);
-            System.out.println(response);
-            if ("success".equals(response.getCode())) {
-                //存数据到数据库中
-                ImageUploadSuccessData data = response.getData();
-                StudentPic studentPic = new StudentPic();
-                studentPic.setUrl(data.getUrl());
-                studentPic.setStudentId(studentId);
-                studentPic.setDeleteUrl(data.getDelete());
-                studentPic.setHash(data.getHash());
-                studentPicService.save(studentPic);
-            }
-
-
-        }
-    }
 
 
 }

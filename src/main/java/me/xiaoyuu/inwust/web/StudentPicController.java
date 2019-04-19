@@ -2,10 +2,18 @@ package me.xiaoyuu.inwust.web;
 
 import me.xiaoyuu.inwust.core.Result;
 import me.xiaoyuu.inwust.core.ResultGenerator;
+import me.xiaoyuu.inwust.dto.StudentInfoVO;
+import me.xiaoyuu.inwust.model.CollegeInfo;
+import me.xiaoyuu.inwust.model.MajorInfo;
+import me.xiaoyuu.inwust.model.StudentInfo;
 import me.xiaoyuu.inwust.model.StudentPic;
+import me.xiaoyuu.inwust.service.CollegeInfoService;
+import me.xiaoyuu.inwust.service.MajorInfoService;
+import me.xiaoyuu.inwust.service.StudentInfoService;
 import me.xiaoyuu.inwust.service.StudentPicService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import me.xiaoyuu.inwust.utils.CommonUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -19,6 +27,12 @@ import java.util.List;
 public class StudentPicController {
     @Resource
     private StudentPicService studentPicService;
+    @Resource
+    private StudentInfoService studentInfoService;
+    @Resource
+    private CollegeInfoService collegeInfoService;
+    @Resource
+    private MajorInfoService majorInfoService;
 
     @PostMapping
     public Result add(@RequestBody StudentPic studentPic) {
@@ -42,6 +56,30 @@ public class StudentPicController {
     public Result detail(@PathVariable Integer id) {
         StudentPic studentPic = studentPicService.findById(id);
         return ResultGenerator.genSuccessResult(studentPic);
+    }
+
+    @PostMapping("/query")
+    public Result query(StudentInfo requestInfo) {
+        System.out.println(requestInfo);
+        String id = requestInfo.getStudentId();
+        String name = requestInfo.getStudentName();
+        StudentInfo studentInfo = studentInfoService.findBy("studentId", id);
+        if (studentInfo == null || !name.equals(studentInfo.getStudentName())) {
+            return ResultGenerator.genFailResult("error");
+        }
+
+        String url = CommonUtil.getStudentPicUrl(id);
+        MajorInfo majorInfo = majorInfoService.findBy("majorCode", studentInfo.getMajorCode());
+        CollegeInfo collegeInfo = collegeInfoService.findBy("collegeCode", majorInfo.getCollegeCode());
+        StudentInfoVO studentInfoVO = new StudentInfoVO();
+        studentInfoVO.setCollegeInfo(collegeInfo);
+        studentInfoVO.setMajorInfo(majorInfo);
+        studentInfoVO.setStudentInfo(studentInfo);
+        studentInfoVO.setUrl(url);
+
+        return ResultGenerator.genSuccessResult(studentInfoVO);
+
+
     }
 
     @GetMapping

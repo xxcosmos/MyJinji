@@ -8,6 +8,18 @@ public class StudentInfoVO {
     private StudentInfo studentInfo;
     private MajorInfo majorInfo;
     private CollegeInfo collegeInfo;
+    private String url;
+
+    public StudentInfoVO() {
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public StudentInfoVO(StudentInfo studentInfo, MajorInfo majorInfo, CollegeInfo collegeInfo) {
         this.studentInfo = studentInfo;

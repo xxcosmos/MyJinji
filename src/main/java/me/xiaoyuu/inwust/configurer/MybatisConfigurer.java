@@ -67,23 +67,6 @@ public class MybatisConfigurer {
         return mapperScannerConfigurer;
     }
 
-    @Autowired
-    private WxProperties properties;
-
-    @Bean
-    public WxMaConfig wxMaConfig() {
-        WxMaInMemoryConfig config = new WxMaInMemoryConfig();
-        config.setAppid(properties.getAppId());
-        config.setSecret(properties.getAppSecret());
-        return config;
-    }
-
-    @Bean
-    public WxMaService wxMaService(WxMaConfig maConfig) {
-        WxMaService service = new WxMaServiceImpl();
-        service.setWxMaConfig(maConfig);
-        return service;
-    }
 
 
 }

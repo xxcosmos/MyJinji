@@ -14,11 +14,7 @@ public class RestTemplateUtil {
         //设置RestTemplate的异常处理类
         restTemplate.setErrorHandler(new RestTemplateErrorHandler());
 
-        // restTemplate.getMessageConverters().add(new WxMappingJackson2HttpMessageConverter());
-        MappingJackson2HttpMessageConverter converter = new WxMappingJackson2HttpMessageConverter();
-        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-        messageConverters.add(converter);
-        restTemplate.setMessageConverters(messageConverters);
+        restTemplate.getMessageConverters().add(new WxMappingJackson2HttpMessageConverter());
         return restTemplate;
     }
 }

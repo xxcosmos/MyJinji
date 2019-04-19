@@ -171,4 +171,17 @@ public class StudentPic {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public String toString() {
+        return "StudentPic{" +
+                "id=" + id +
+                ", studentId='" + studentId + '\'' +
+                ", url='" + url + '\'' +
+                ", deleteUrl='" + deleteUrl + '\'' +
+                ", hash='" + hash + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }
