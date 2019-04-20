@@ -1,8 +1,11 @@
 package me.xiaoyuu.inwust.service.impl;
 
 import me.xiaoyuu.inwust.dao.StudentInfoMapper;
+import me.xiaoyuu.inwust.dto.StudentInfoVO;
+import me.xiaoyuu.inwust.model.CollegeInfo;
 import me.xiaoyuu.inwust.model.MajorInfo;
 import me.xiaoyuu.inwust.model.StudentInfo;
+import me.xiaoyuu.inwust.service.CollegeInfoService;
 import me.xiaoyuu.inwust.service.MajorInfoService;
 import me.xiaoyuu.inwust.service.StudentInfoService;
 import me.xiaoyuu.inwust.core.AbstractService;
@@ -32,6 +35,15 @@ public class StudentInfoServiceImpl extends AbstractService<StudentInfo> impleme
     private StudentInfoMapper studentInfoMapper;
     @Resource
     private MajorInfoService majorInfoService;
+    @Resource
+    private CollegeInfoService collegeInfoService;
+
+    public StudentInfoVO getStudentInfoVo(String studentName) {
+        StudentInfo studentInfo = this.findBy("studentName", studentName);
+        MajorInfo majorInfo = majorInfoService.findBy("majorCode", studentInfo.getMajorCode());
+        CollegeInfo collegeInfo = collegeInfoService.findBy("collegeCode", majorInfo.getCollegeCode());
+        return new StudentInfoVO(studentInfo, majorInfo, collegeInfo);
+    }
 
     public void saveWithIgnore(StudentInfo studentInfo) {
         studentInfoMapper.insertOneWithIgnore(studentInfo);

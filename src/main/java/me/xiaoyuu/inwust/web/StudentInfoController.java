@@ -17,8 +17,8 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
-* Created by xiaoyuu on 2019/04/12.
-*/
+ * Created by xiaoyuu on 2019/04/12.
+ */
 @RestController
 @RequestMapping("/student/info")
 public class StudentInfoController {
@@ -47,7 +47,7 @@ public class StudentInfoController {
         return ResultGenerator.genSuccessResult();
     }
 
-//    @GetMapping("/{id}")
+    //    @GetMapping("/{id}")
 //    public Result detail(@PathVariable Integer id) {
 //        StudentInfo studentInfo = studentInfoService.findById(id);
 //        return ResultGenerator.genSuccessResult(studentInfo);
@@ -55,22 +55,22 @@ public class StudentInfoController {
     @GetMapping("/name/{name}")
     public Result FindStudentInfoByName(@PathVariable String name) {
         System.out.println(name);
+
+        StudentInfoVO vo = new StudentInfoVO();
+
         //查的是我
-        if (name.equals("张啸宇")){
-            return ResultGenerator.genSuccessResult(new StudentInfoVO(new StudentInfo("该人不存在哈哈哈哈哈哈😉",""),new MajorInfo(),new CollegeInfo()));
+        if (name.equals("张啸宇")) {
+            return ResultGenerator.genFailResult("该人不存在哈哈哈😂");
         }
+
         //同名的个数
         int num = studentInfoService.isExistByStudentName(name);
-        if(num>1){
-            return ResultGenerator.genSuccessResult(new StudentInfo("同名的有"+num+"个，请使用学号搜索。",""));
-        }else if (num==1){
-            StudentInfo studentInfo = studentInfoService.findBy("studentName",name);
-            MajorInfo majorInfo = majorInfoService.findBy("majorCode", studentInfo.getMajorCode());
-            CollegeInfo collegeInfo = collegeInfoService.findBy("collegeCode", majorInfo.getCollegeCode());
-
-            return ResultGenerator.genSuccessResult(new StudentInfoVO(studentInfo, majorInfo, collegeInfo));
-        }else {
-            return ResultGenerator.genFailResult("查询不到");
+        if (num > 1) {
+            return ResultGenerator.genFailResult("同名的太多,请使用学号进行搜索");
+        } else if (num == 1) {
+            return ResultGenerator.genSuccessResult(studentInfoService.getStudentInfoVo(name));
+        } else {
+            return ResultGenerator.genFailResult("不存在该姓名的学生");
         }
     }
 
@@ -78,14 +78,12 @@ public class StudentInfoController {
     public Result findStudentInfoById(@PathVariable String id) {
         System.out.println(id);
 
-        StudentInfo studentInfo = studentInfoService.findBy("studentId",id);
-        if (studentInfo==null){
-            return ResultGenerator.genFailResult("查询不到");
+        StudentInfo studentInfo = studentInfoService.findBy("studentId", id);
+        if (studentInfo == null) {
+            return ResultGenerator.genFailResult("不存在该学号的学生");
         }
-        MajorInfo majorInfo = majorInfoService.findBy("majorCode", studentInfo.getMajorCode());
-        CollegeInfo collegeInfo = collegeInfoService.findBy("collegeCode", majorInfo.getCollegeCode());
-
-        return ResultGenerator.genSuccessResult(new StudentInfoVO(studentInfo, majorInfo, collegeInfo));
+        StudentInfoVO studentInfoVO = studentInfoService.getStudentInfoVo(studentInfo.getStudentName());
+        return ResultGenerator.genSuccessResult(studentInfoVO);
     }
 
 //    @GetMapping

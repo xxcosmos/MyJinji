@@ -1,4 +1,6 @@
 package me.xiaoyuu.inwust.service;
+
+import me.xiaoyuu.inwust.dto.StudentInfoVO;
 import me.xiaoyuu.inwust.model.StudentInfo;
 import me.xiaoyuu.inwust.core.Service;
 
@@ -10,6 +12,8 @@ import java.util.List;
  * Created by xiaoyuu on 2019/04/12.
  */
 public interface StudentInfoService extends Service<StudentInfo> {
+    public StudentInfoVO getStudentInfoVo(String studentName);
+
     void saveWithIgnore(StudentInfo studentInfo);
 
     int isExistByStudentId(String studentId);

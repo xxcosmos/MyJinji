@@ -59,22 +59,25 @@ public class StudentPicController {
     }
 
     @PostMapping("/query")
-    public Result query(StudentInfo requestInfo) {
-        System.out.println(requestInfo);
-        String id = requestInfo.getStudentId();
-        String name = requestInfo.getStudentName();
-        StudentInfo studentInfo = studentInfoService.findBy("studentId", id);
-        if (studentInfo == null || !name.equals(studentInfo.getStudentName())) {
-            return ResultGenerator.genFailResult("error");
+    public Result query(@RequestBody StudentInfo info) {
+        System.out.println(info);
+        String studentId = info.getStudentId();
+        String studentName = info.getStudentName();
+        if (studentId == null || studentName == null) {
+            return ResultGenerator.genFailResult("无参数");
         }
 
-        String url = CommonUtil.getStudentPicUrl(id);
-        MajorInfo majorInfo = majorInfoService.findBy("majorCode", studentInfo.getMajorCode());
-        CollegeInfo collegeInfo = collegeInfoService.findBy("collegeCode", majorInfo.getCollegeCode());
-        StudentInfoVO studentInfoVO = new StudentInfoVO();
-        studentInfoVO.setCollegeInfo(collegeInfo);
-        studentInfoVO.setMajorInfo(majorInfo);
-        studentInfoVO.setStudentInfo(studentInfo);
+        StudentInfo studentInfo = studentInfoService.findBy("studentId", info.getStudentId());
+
+        if (studentInfo == null) {
+            return ResultGenerator.genFailResult("不存在该学号对应的学生");
+        }
+        if (!info.getStudentName().equals(studentInfo.getStudentName())) {
+            return ResultGenerator.genFailResult("姓名和学号不对应");
+        }
+
+        String url = CommonUtil.getStudentPicUrl(studentId);
+        StudentInfoVO studentInfoVO = studentInfoService.getStudentInfoVo(studentName);
         studentInfoVO.setUrl(url);
 
         return ResultGenerator.genSuccessResult(studentInfoVO);
