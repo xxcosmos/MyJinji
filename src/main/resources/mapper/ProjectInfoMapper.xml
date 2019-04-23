@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.xiaoyuu.inwust.dao.ProjectInfoMapper">
+    <resultMap id="BaseResultMap" type="me.xiaoyuu.inwust.model.ProjectInfo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="image" jdbcType="VARCHAR" property="image"/>
+        <result column="introduction" jdbcType="VARCHAR" property="introduction"/>
+        <result column="field" jdbcType="VARCHAR" property="field"/>
+        <result column="local" jdbcType="VARCHAR" property="local"/>
+        <result column="is_company" jdbcType="BIT" property="isCompany"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+    </resultMap>
+</mapper>

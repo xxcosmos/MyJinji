@@ -141,10 +141,12 @@
             <version>2.1.4.RELEASE</version>
         </dependency>
 
+
+        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <dependency>
-            <groupId>me.xiaoyuu</groupId>
-            <artifactId>justforfun</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.11.3</version>
         </dependency>
     </dependencies>
 
