@@ -15,4 +15,10 @@ public interface CourseInfoService extends Service<CourseInfo> {
     List<CourseInfo> getByCollegeCode(String collegeCode);
 
     List<CourseInfo> getByTeacherName(String keyword);
+
+    int getNumByTeacherNameAndCourseName(String teacherName, String courseName);
+
+    CourseInfo getByTeacherNameAndCourseName(String teacherName, String courseName);
+
+    void dbProcess(List<CourseInfo> courseInfoList);
 }

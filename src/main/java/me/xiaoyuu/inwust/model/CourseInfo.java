@@ -20,7 +20,7 @@ public class CourseInfo {
      */
     @Id
     @Column(name = "course_credit")
-    private Long courseCredit;
+    private String courseCredit;
 
     /**
      * 0:未知,1:必修,2:选修
@@ -70,7 +70,7 @@ public class CourseInfo {
      * 平均成绩
      */
     @Column(name = "average_grade")
-    private Long averageGrade;
+    private String averageGrade;
 
     /**
      * 成绩样本人数
@@ -82,7 +82,7 @@ public class CourseInfo {
      * 及格率
      */
     @Column(name = "pass_percent")
-    private Long passPercent;
+    private String passPercent;
 
     /**
      * 创建时间
@@ -99,7 +99,7 @@ public class CourseInfo {
     public CourseInfo(RawCourseInfo rawCourseInfo) {
         this.courseCode = rawCourseInfo.getKch();
         this.courseName = rawCourseInfo.getKcmc();
-        this.courseCredit = Math.round(rawCourseInfo.getXf());
+        this.courseCredit = String.valueOf(rawCourseInfo.getXf());
         this.courseHour = rawCourseInfo.getZxs();
         if (rawCourseInfo.getKcsxm().equals("必修")) {
             this.courseType = 1;
@@ -116,10 +116,13 @@ public class CourseInfo {
     public CourseInfo(JacseerCourseInfo jacseerCourseInfo) {
         this.teacherName = jacseerCourseInfo.getJsxm();
         this.courseName = jacseerCourseInfo.getKcmc();
-        this.averageGrade = Float.valueOf(jacseerCourseInfo.getAvg_grade()).longValue();
-        this.passPercent = Float.valueOf(jacseerCourseInfo.getPass_percent()).longValue();
+        this.averageGrade = jacseerCourseInfo.getAvg_grade();
+        this.passPercent = jacseerCourseInfo.getPass_percent();
         this.gradeCount = Integer.valueOf(jacseerCourseInfo.getCounts());
 
+    }
+
+    public CourseInfo() {
     }
 
     /**
@@ -145,7 +148,7 @@ public class CourseInfo {
      *
      * @return course_credit - 学分
      */
-    public Long getCourseCredit() {
+    public String getCourseCredit() {
         return courseCredit;
     }
 
@@ -154,7 +157,7 @@ public class CourseInfo {
      *
      * @param courseCredit 学分
      */
-    public void setCourseCredit(Long courseCredit) {
+    public void setCourseCredit(String courseCredit) {
         this.courseCredit = courseCredit;
     }
 
@@ -289,7 +292,7 @@ public class CourseInfo {
      *
      * @return average_grade - 平均成绩
      */
-    public Long getAverageGrade() {
+    public String getAverageGrade() {
         return averageGrade;
     }
 
@@ -298,7 +301,7 @@ public class CourseInfo {
      *
      * @param averageGrade 平均成绩
      */
-    public void setAverageGrade(Long averageGrade) {
+    public void setAverageGrade(String averageGrade) {
         this.averageGrade = averageGrade;
     }
 
@@ -361,7 +364,7 @@ public class CourseInfo {
      *
      * @return pass_percent - 及格率
      */
-    public Long getPassPercent() {
+    public String getPassPercent() {
         return passPercent;
     }
 
@@ -370,7 +373,7 @@ public class CourseInfo {
      *
      * @param passPercent 及格率
      */
-    public void setPassPercent(Long passPercent) {
+    public void setPassPercent(String passPercent) {
         this.passPercent = passPercent;
     }
 

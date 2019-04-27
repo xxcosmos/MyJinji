@@ -1,10 +1,12 @@
 package me.xiaoyuu.inwust;
 
-import me.xiaoyuu.inwust.model.MajorInfo;
+import com.alibaba.fastjson.JSON;
+import me.xiaoyuu.inwust.dto.RawCourseInfo;
+import me.xiaoyuu.inwust.model.CourseInfo;
 import me.xiaoyuu.inwust.model.ProjectInfo;
-import me.xiaoyuu.inwust.model.StudentInfo;
 import me.xiaoyuu.inwust.service.*;
 import me.xiaoyuu.inwust.utils.CommonUtil;
+import me.xiaoyuu.inwust.utils.CourseInfoUtil;
 import me.xiaoyuu.inwust.utils.RestTemplate.RestTemplateUtil;
 import me.xiaoyuu.inwust.utils.StudentInfoUtil;
 import org.jsoup.Jsoup;
@@ -15,11 +17,17 @@ import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
+
+import static me.xiaoyuu.inwust.utils.CourseInfoUtil.getCourseInfoList;
+import static me.xiaoyuu.inwust.utils.CourseInfoUtil.gradeURL;
 
 public class Parse extends Tester {
 
@@ -27,6 +35,8 @@ public class Parse extends Tester {
     StudentInfoService studentInfoService;
     @Resource
     MajorInfoService majorInfoService;
+    @Resource
+    CourseInfoService courseInfoService;
     @Resource
     CollegeInfoService collegeInfoService;
     @Resource
@@ -158,12 +168,49 @@ public class Parse extends Tester {
     }
 
     @Test
-    public void test() {
+    public void test22() {
+        String url = gradeURL + "1";
         try {
-            RestTemplate restTemplate = RestTemplateUtil.getInstance();
-        } catch (KeyManagementException e) {
+            List<CourseInfo> courseInfoList = getCourseInfoList(url);
+            for (CourseInfo courseInfo : courseInfoList) {
+                courseInfoService.update(courseInfo);
+            }
+
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
+        }
+    }
+
+    @Test
+    public void test() {
+        String url = gradeURL + "1";
+        try {
+            List<CourseInfo> courseInfoList = getCourseInfoList(url);
+            courseInfoService.dbProcess(courseInfoList);
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    @Test
+    public void test223() {
+
+        try {
+            String filePath = "/Users/xiaoyuu/IdeaProjects/my-springboot-seed-project/src/main/resources/static/AllClass.json";
+            String s = CommonUtil.fileToString(filePath);
+            System.out.println(s);
+
+            List<CourseInfo> courseInfoList = CourseInfoUtil.getCourseInfoListFromJson(s);
+            for (CourseInfo courseInfo : courseInfoList) {
+                courseInfo.setUpdateTime(null);
+                courseInfoService.update();
+            }
+
+            System.out.println(courseInfoList);
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

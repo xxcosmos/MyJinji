@@ -12,4 +12,8 @@ public interface CourseInfoMapper extends Mapper<CourseInfo> {
     List<CourseInfo> selectByCourseName(@Param("keyword") String keyword);
 
     List<CourseInfo> selectByTeacherName(@Param("keyword") String keyword);
+
+    int selectNumByTeacherNameAndCourseName(@Param("teacherName") String teacherName, @Param("courseName") String courseName);
+
+    CourseInfo selectByTeacherNameAndCourseName(@Param("teacherName") String teacherName, @Param("courseName") String courseName);
 }
