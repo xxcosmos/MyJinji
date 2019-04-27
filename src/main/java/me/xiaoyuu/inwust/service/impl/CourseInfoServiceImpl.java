@@ -12,7 +12,7 @@ import java.util.List;
 
 
 /**
- * Created by xiaoyuu on 2019/04/10.
+ * Created by xiaoyuu on 2019/04/27.
  */
 @Service
 @Transactional
@@ -20,26 +20,18 @@ public class CourseInfoServiceImpl extends AbstractService<CourseInfo> implement
     @Resource
     private CourseInfoMapper courseInfoMapper;
 
-    public void saveWithIgnore(CourseInfo courseInfo){
-        courseInfoMapper.insertOneWithIgnore(courseInfo);
-    }
 
-    public void saveWithIgnore(List<CourseInfo> courseInfoList){
-        courseInfoMapper.insertAlltWithIgnore(courseInfoList);
-    }
-
-    public List<CourseInfo> getByCollegeCode(String collegeCode){
-       return courseInfoMapper.selectByCollegeCode(collegeCode);
+    public List<CourseInfo> getByCollegeCode(String collegeCode) {
+        return courseInfoMapper.selectByCollegeCode(collegeCode);
 
     }
 
-    public List<CourseInfo> getByCourseName(String keyword){
+    public List<CourseInfo> getByCourseName(String keyword) {
         return courseInfoMapper.selectByCourseName(keyword);
     }
 
-    public List<CourseInfo> getByTeacherName(String keyword){
+    public List<CourseInfo> getByTeacherName(String keyword) {
         return courseInfoMapper.selectByTeacherName(keyword);
     }
-
 
 }

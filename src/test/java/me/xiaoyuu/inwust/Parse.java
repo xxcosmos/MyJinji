@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.io.*;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,16 +36,21 @@ public class Parse extends Tester {
     @Resource
     ProjectInfoService projectInfoService;
 
-    // public static final String PATH_NAME = "/Users/xiaoyuu/IdeaProjects/JustForFun/src/main/resources/project_list.txt";
     @Test
     public void getProject() {
         int pageSize = 3000;
         //  File file = new File(PATH_NAME);
         //  FileWriter fileWriter = new FileWriter(file);
         //  fileWriter.write("");
-        RestTemplate restTemplate = RestTemplateUtil.getInstance();
+        RestTemplate restTemplate = null;
+        try {
+            restTemplate = RestTemplateUtil.getInstance();
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         for (int k = 0; k < (PROJECT_NUM / pageSize) + 1; k++) {
             String listUrl = BASE_URL + "&pageIndex=" + k + "&pageSize=" + pageSize;
+            assert restTemplate != null;
             String response = restTemplate.getForObject(listUrl, String.class);
             //   fileWriter.append(response);
             assert response != null;
@@ -152,14 +159,14 @@ public class Parse extends Tester {
 
     @Test
     public void test() {
-        List<StudentInfo> studentInfoList = studentInfoService.findAll();
         try {
-            for (StudentInfo s : studentInfoList) {
-                CommonUtil.savePicToLocal(s.getStudentId());
-            }
-        } catch (IOException e) {
+            RestTemplate restTemplate = RestTemplateUtil.getInstance();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
+
 
     }
 

@@ -6,16 +6,10 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-@org.apache.ibatis.annotations.Mapper
 public interface CourseInfoMapper extends Mapper<CourseInfo> {
+    List<CourseInfo> selectByCollegeCode(@Param("collegeCode") String collegeCode);
 
-     void insertOneWithIgnore(@Param("courseInfo") CourseInfo courseInfo);
+    List<CourseInfo> selectByCourseName(@Param("keyword") String keyword);
 
-     void insertAlltWithIgnore(@Param("courseInfoList")List<CourseInfo> courseInfoList);
-
-     List<CourseInfo> selectByCollegeCode(@Param("collegeCode") String collegeCode);
-
-     List<CourseInfo> selectByCourseName(@Param("keyword") String keyword);
-     List<CourseInfo> selectByTeacherName(@Param("keyword") String keyword);
-
+    List<CourseInfo> selectByTeacherName(@Param("keyword") String keyword);
 }

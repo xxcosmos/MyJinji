@@ -1,5 +1,6 @@
 package me.xiaoyuu.inwust.model;
 
+import me.xiaoyuu.inwust.dto.JacseerCourseInfo;
 import me.xiaoyuu.inwust.dto.RawCourseInfo;
 
 import java.util.Date;
@@ -8,17 +9,38 @@ import javax.persistence.*;
 @Table(name = "course_info")
 public class CourseInfo {
     /**
-     * id
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    /**
      * 课程代码
      */
+    @Id
     @Column(name = "course_code")
     private String courseCode;
+
+    /**
+     * 学分
+     */
+    @Id
+    @Column(name = "course_credit")
+    private Long courseCredit;
+
+    /**
+     * 0:未知,1:必修,2:选修
+     */
+    @Id
+    @Column(name = "course_type")
+    private Integer courseType;
+
+    /**
+     * 教师姓名
+     */
+    @Id
+    @Column(name = "teacher_name")
+    private String teacherName;
+
+    /**
+     * id
+     */
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     /**
      * 课程名称
@@ -27,22 +49,10 @@ public class CourseInfo {
     private String courseName;
 
     /**
-     * 学分
-     */
-    @Column(name = "course_credit")
-    private Long courseCredit;
-
-    /**
      * 总学时
      */
     @Column(name = "course_hour")
     private Integer courseHour;
-
-    /**
-     * 0:未知,1:必修,2:选修
-     */
-    @Column(name = "course_type")
-    private Integer courseType;
 
     /**
      * 课程性质名称
@@ -51,16 +61,28 @@ public class CourseInfo {
     private String courseTypeName;
 
     /**
-     * 教师姓名
-     */
-    @Column(name = "teacher_name")
-    private String teacherName;
-
-    /**
      * 开课单位名称
      */
     @Column(name = "unit_name")
     private String unitName;
+
+    /**
+     * 平均成绩
+     */
+    @Column(name = "average_grade")
+    private Long averageGrade;
+
+    /**
+     * 成绩样本人数
+     */
+    @Column(name = "grade_count")
+    private Integer gradeCount;
+
+    /**
+     * 及格率
+     */
+    @Column(name = "pass_percent")
+    private Long passPercent;
 
     /**
      * 创建时间
@@ -74,22 +96,30 @@ public class CourseInfo {
     @Column(name = "update_time")
     private Date updateTime;
 
-    /**
-     * 获取id
-     *
-     * @return id - id
-     */
-    public Integer getId() {
-        return id;
+    public CourseInfo(RawCourseInfo rawCourseInfo) {
+        this.courseCode = rawCourseInfo.getKch();
+        this.courseName = rawCourseInfo.getKcmc();
+        this.courseCredit = Math.round(rawCourseInfo.getXf());
+        this.courseHour = rawCourseInfo.getZxs();
+        if (rawCourseInfo.getKcsxm().equals("必修")) {
+            this.courseType = 1;
+        } else if (rawCourseInfo.getKcsxm().equals("选修")) {
+            this.courseType = 2;
+        } else {
+            this.courseType = 0;
+        }
+        this.courseTypeName = rawCourseInfo.getKcxzmc();
+        this.teacherName = rawCourseInfo.getJsxm();
+        this.unitName = rawCourseInfo.getDwmc();
     }
 
-    /**
-     * 设置id
-     *
-     * @param id id
-     */
-    public void setId(Integer id) {
-        this.id = id;
+    public CourseInfo(JacseerCourseInfo jacseerCourseInfo) {
+        this.teacherName = jacseerCourseInfo.getJsxm();
+        this.courseName = jacseerCourseInfo.getKcmc();
+        this.averageGrade = Float.valueOf(jacseerCourseInfo.getAvg_grade()).longValue();
+        this.passPercent = Float.valueOf(jacseerCourseInfo.getPass_percent()).longValue();
+        this.gradeCount = Integer.valueOf(jacseerCourseInfo.getCounts());
+
     }
 
     /**
@@ -111,24 +141,6 @@ public class CourseInfo {
     }
 
     /**
-     * 获取课程名称
-     *
-     * @return course_name - 课程名称
-     */
-    public String getCourseName() {
-        return courseName;
-    }
-
-    /**
-     * 设置课程名称
-     *
-     * @param courseName 课程名称
-     */
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
-
-    /**
      * 获取学分
      *
      * @return course_credit - 学分
@@ -144,24 +156,6 @@ public class CourseInfo {
      */
     public void setCourseCredit(Long courseCredit) {
         this.courseCredit = courseCredit;
-    }
-
-    /**
-     * 获取总学时
-     *
-     * @return course_hour - 总学时
-     */
-    public Integer getCourseHour() {
-        return courseHour;
-    }
-
-    /**
-     * 设置总学时
-     *
-     * @param courseHour 总学时
-     */
-    public void setCourseHour(Integer courseHour) {
-        this.courseHour = courseHour;
     }
 
     /**
@@ -183,6 +177,60 @@ public class CourseInfo {
     }
 
     /**
+     * 获取id
+     *
+     * @return id - id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * 设置id
+     *
+     * @param id id
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 获取课程名称
+     *
+     * @return course_name - 课程名称
+     */
+    public String getCourseName() {
+        return courseName;
+    }
+
+    /**
+     * 设置课程名称
+     *
+     * @param courseName 课程名称
+     */
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    /**
+     * 获取总学时
+     *
+     * @return course_hour - 总学时
+     */
+    public Integer getCourseHour() {
+        return courseHour;
+    }
+
+    /**
+     * 设置总学时
+     *
+     * @param courseHour 总学时
+     */
+    public void setCourseHour(Integer courseHour) {
+        this.courseHour = courseHour;
+    }
+
+    /**
      * 获取课程性质名称
      *
      * @return course_type_name - 课程性质名称
@@ -198,6 +246,24 @@ public class CourseInfo {
      */
     public void setCourseTypeName(String courseTypeName) {
         this.courseTypeName = courseTypeName;
+    }
+
+    /**
+     * 获取开课单位名称
+     *
+     * @return unit_name - 开课单位名称
+     */
+    public String getUnitName() {
+        return unitName;
+    }
+
+    /**
+     * 设置开课单位名称
+     *
+     * @param unitName 开课单位名称
+     */
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
     }
 
     /**
@@ -219,21 +285,39 @@ public class CourseInfo {
     }
 
     /**
-     * 获取开课单位名称
+     * 获取平均成绩
      *
-     * @return unit_name - 开课单位名称
+     * @return average_grade - 平均成绩
      */
-    public String getUnitName() {
-        return unitName;
+    public Long getAverageGrade() {
+        return averageGrade;
     }
 
     /**
-     * 设置开课单位名称
+     * 设置平均成绩
      *
-     * @param unitName 开课单位名称
+     * @param averageGrade 平均成绩
      */
-    public void setUnitName(String unitName) {
-        this.unitName = unitName;
+    public void setAverageGrade(Long averageGrade) {
+        this.averageGrade = averageGrade;
+    }
+
+    /**
+     * 获取成绩样本人数
+     *
+     * @return grade_count - 成绩样本人数
+     */
+    public Integer getGradeCount() {
+        return gradeCount;
+    }
+
+    /**
+     * 设置成绩样本人数
+     *
+     * @param gradeCount 成绩样本人数
+     */
+    public void setGradeCount(Integer gradeCount) {
+        this.gradeCount = gradeCount;
     }
 
     /**
@@ -272,38 +356,39 @@ public class CourseInfo {
         this.updateTime = updateTime;
     }
 
-    public CourseInfo(RawCourseInfo rawCourseInfo) {
-        this.courseCode = rawCourseInfo.getKch();
-        this.courseName = rawCourseInfo.getKcmc();
-        this.courseCredit= Math.round(rawCourseInfo.getXf());
-        this.courseHour = rawCourseInfo.getZxs();
-        if (rawCourseInfo.getKcsxm().equals("必修")){
-            this.courseType = 1;
-        }else if (rawCourseInfo.getKcsxm().equals("选修")){
-            this.courseType = 2;
-        }else {
-            this.courseType = 0;
-        }
-        this.courseTypeName = rawCourseInfo.getKcxzmc();
-        this.teacherName = rawCourseInfo.getJsxm();
-        this.unitName = rawCourseInfo.getDwmc();
+    /**
+     * 获取及格率
+     *
+     * @return pass_percent - 及格率
+     */
+    public Long getPassPercent() {
+        return passPercent;
     }
 
-    public CourseInfo() {
+    /**
+     * 设置及格率
+     *
+     * @param passPercent 及格率
+     */
+    public void setPassPercent(Long passPercent) {
+        this.passPercent = passPercent;
     }
 
     @Override
     public String toString() {
         return "CourseInfo{" +
-                "id=" + id +
-                ", courseCode='" + courseCode + '\'' +
-                ", courseName='" + courseName + '\'' +
+                "courseCode='" + courseCode + '\'' +
                 ", courseCredit=" + courseCredit +
-                ", courseHour=" + courseHour +
                 ", courseType=" + courseType +
-                ", courseTypeName='" + courseTypeName + '\'' +
                 ", teacherName='" + teacherName + '\'' +
+                ", id=" + id +
+                ", courseName='" + courseName + '\'' +
+                ", courseHour=" + courseHour +
+                ", courseTypeName='" + courseTypeName + '\'' +
                 ", unitName='" + unitName + '\'' +
+                ", averageGrade=" + averageGrade +
+                ", gradeCount=" + gradeCount +
+                ", passPercent=" + passPercent +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';

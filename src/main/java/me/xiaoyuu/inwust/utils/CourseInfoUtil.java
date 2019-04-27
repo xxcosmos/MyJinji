@@ -1,46 +1,64 @@
 package me.xiaoyuu.inwust.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import me.xiaoyuu.inwust.core.Result;
+import me.xiaoyuu.inwust.dto.JacseerCourseInfo;
 import me.xiaoyuu.inwust.dto.RawCourseInfo;
 import me.xiaoyuu.inwust.model.CourseInfo;
-import me.xiaoyuu.inwust.service.CourseInfoService;
-import org.apache.commons.io.IOUtils;
+import me.xiaoyuu.inwust.utils.RestTemplate.RestTemplateUtil;
+import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.Resource;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CourseInfoUtil {
-    @Resource
-    private static CourseInfoService  courseInfoService;
+    public static final String gradeURL = "https://https.jakseer.cn/wx_app/Home/Analysis/getCourseAnalysis.html?name=";
 
     /**
-     * 从课程信息的json中读取课程到course_info表
-     * @param file 文件地址
+     * 从课程信息的json中读取课程,返回课程list
+     *
+     * @param json json格式的字符串
      */
-    public static void courseInfoJson2DB(String file) {
-        try {
-            InputStream inputStream = new FileInputStream(file);
-            String text = IOUtils.toString(inputStream, "utf8");
-            //得到原始课程信息列表
-            List<RawCourseInfo> rawCourseInfoList = JSONArray.parseArray(text, RawCourseInfo.class);
+    public static List<CourseInfo> getCourseInfoListFromJson(String json) {
+        //得到原始课程信息列表
+        List<RawCourseInfo> rawCourseInfoList = JSONArray.parseArray(json, RawCourseInfo.class);
 
-            List<CourseInfo> courseInfoList = new ArrayList<>();
-            for (RawCourseInfo rawCourseInfo : rawCourseInfoList) {
-                courseInfoList.add(new CourseInfo(rawCourseInfo));
-            }
-            //保存到数据库
-            courseInfoService.saveWithIgnore(courseInfoList);
-        } catch (FileNotFoundException e) {
-            System.out.println("FileNotFound");
-        } catch (IOException e) {
-            System.out.println("IOException");
+        List<CourseInfo> courseInfoList = new ArrayList<>();
+        for (RawCourseInfo rawCourseInfo : rawCourseInfoList) {
+            courseInfoList.add(new CourseInfo(rawCourseInfo));
         }
+        return courseInfoList;
     }
 
+    public static List<CourseInfo> getCourseINfoListFromJson2(String json) {
+        List<JacseerCourseInfo> jacseerCourseInfoList = JSONArray.parseArray(json, JacseerCourseInfo.class);
+        List<CourseInfo> courseInfoList = new ArrayList<>();
+        for (JacseerCourseInfo jacseerCourseInfo : jacseerCourseInfoList) {
+            courseInfoList.add(new CourseInfo(jacseerCourseInfo));
+        }
+        return courseInfoList;
+    }
+
+    public static void main(String[] args) {
+        String url = gradeURL + "1";
+        RestTemplate restTemplate = null;
+        try {
+            restTemplate = RestTemplateUtil.getInstance();
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        assert restTemplate != null;
+        String response = restTemplate.getForObject(url, String.class);
+        Result result = JSON.parseObject(response, Result.class);
+        assert result != null;
+        System.out.println(result.getData());
+        List<CourseInfo> courseInfoList = getCourseINfoListFromJson2(String.valueOf(result.getData()));
+        for (CourseInfo courseInfo : courseInfoList) {
+            System.out.println(courseInfo);
+        }
+    }
 
 }
