@@ -5,11 +5,11 @@
         <!--
           WARNING - @mbg.generated
         -->
-        <id column="course_code" jdbcType="VARCHAR" property="courseCode"/>
-        <id column="course_credit" jdbcType="VARCHAR" property="courseCredit"/>
-        <id column="course_type" jdbcType="INTEGER" property="courseType"/>
-        <id column="teacher_name" jdbcType="VARCHAR" property="teacherName"/>
-        <result column="id" jdbcType="INTEGER" property="id"/>
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="course_code" jdbcType="VARCHAR" property="courseCode"/>
+        <result column="course_credit" jdbcType="VARCHAR" property="courseCredit"/>
+        <result column="course_type" jdbcType="INTEGER" property="courseType"/>
+        <result column="teacher_name" jdbcType="VARCHAR" property="teacherName"/>
         <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
         <result column="course_hour" jdbcType="INTEGER" property="courseHour"/>
         <result column="course_type_name" jdbcType="VARCHAR" property="courseTypeName"/>
@@ -37,16 +37,17 @@
                create_time,
                update_time
         from inwust.course_info
-        where teacher_name like concat('%', #{teacherName}, '%')
-          and course_name like concat('%', #{courseName}, '%')
+        where (teacher_name like concat('%', #{teacherName}, '%') and course_name like concat('%', #{courseName}, '%'))
+           or (#{teacherName} like concat('%', teacher_name, '%') and #{courseName} like concat('%', course_name, '%'))
     </select>
 
     <select id="selectNumByTeacherNameAndCourseName" resultType="java.lang.Integer">
         select count(*)
         from inwust.course_info
-        where teacher_name like concat('%', #{teacherName}, '%')
-          and course_name like concat('%', #{courseName}, '%')
+        where (teacher_name like concat('%', #{teacherName}, '%') and course_name like concat('%', #{courseName}, '%'))
+           or (#{teacherName} like concat('%', teacher_name, '%') and #{courseName} like concat('%', course_name, '%'))
     </select>
+
     <select id="selectByCollegeCode" resultMap="BaseResultMap">
         select id,
                course_code,
@@ -104,10 +105,28 @@
         where teacher_name like concat('%', #{keyword}, '%')
     </select>
 
-    <update id="updateCourseCredit" parameterType="java.lang.String">
+    <update id="updateCourseCredit" parameterType="me.xiaoyuu.inwust.model.CourseInfo">
         update inwust.course_info
-        set course_credit=#{courseCredit}
-        where
+        set course_credit=#{courseInfo.courseCredit}
+        where teacher_name = #{courseInfo.teacherName}
+          and course_name = #{courseInfo.courseName}
+          and course_code = #{courseInfo.courseCode}
+          and course_hour = #{courseInfo.courseHour}
+          and course_type = #{courseInfo.courseType}
+          and course_type_name = #{courseInfo.courseTypeName}
+          and unit_name = #{courseInfo.unitName}
     </update>
+
+    <insert id="insertIgnore" parameterType="me.xiaoyuu.inwust.model.CourseInfo">
+        insert ignore into inwust.course_info(course_code, course_name, course_credit, course_hour, course_type,
+                                              course_type_name, teacher_name, unit_name, average_grade, grade_count,
+                                              pass_percent, create_time, update_time)
+        VALUES
+    </insert>
+
+    <!--<update id="updateGradeInfo" parameterType="me.xiaoyuu.inwust.model.CourseInfo">-->
+    <!--update inwust.course_info-->
+    <!--set-->
+    <!--</update>-->
 
 </mapper>

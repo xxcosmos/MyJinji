@@ -167,26 +167,14 @@ public class Parse extends Tester {
 //        }
     }
 
-    @Test
-    public void test22() {
-        String url = gradeURL + "1";
-        try {
-            List<CourseInfo> courseInfoList = getCourseInfoList(url);
-            for (CourseInfo courseInfo : courseInfoList) {
-                courseInfoService.update(courseInfo);
-            }
-
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Test
     public void test() {
-        String url = gradeURL + "1";
+        String url = gradeURL + "%";
         try {
             List<CourseInfo> courseInfoList = getCourseInfoList(url);
-            courseInfoService.dbProcess(courseInfoList);
+            //courseInfoService.dbProcess(courseInfoList);
+            System.out.println(courseInfoList.size());
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
         }
@@ -201,15 +189,13 @@ public class Parse extends Tester {
         try {
             String filePath = "/Users/xiaoyuu/IdeaProjects/my-springboot-seed-project/src/main/resources/static/AllClass.json";
             String s = CommonUtil.fileToString(filePath);
-            System.out.println(s);
 
             List<CourseInfo> courseInfoList = CourseInfoUtil.getCourseInfoListFromJson(s);
             for (CourseInfo courseInfo : courseInfoList) {
-                courseInfo.setUpdateTime(null);
-                courseInfoService.update();
+                courseInfoService.updateCourseCredit(courseInfo);
+                System.out.println(courseInfo.getCourseName());
             }
 
-            System.out.println(courseInfoList);
         } catch (IOException e) {
             e.printStackTrace();
         }

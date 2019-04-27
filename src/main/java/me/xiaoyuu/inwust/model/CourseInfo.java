@@ -11,34 +11,31 @@ public class CourseInfo {
     /**
      * 课程代码
      */
-    @Id
     @Column(name = "course_code")
     private String courseCode;
 
     /**
      * 学分
      */
-    @Id
     @Column(name = "course_credit")
     private String courseCredit;
 
     /**
      * 0:未知,1:必修,2:选修
      */
-    @Id
     @Column(name = "course_type")
     private Integer courseType;
 
     /**
      * 教师姓名
      */
-    @Id
     @Column(name = "teacher_name")
     private String teacherName;
 
     /**
      * id
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

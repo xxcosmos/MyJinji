@@ -18,7 +18,9 @@ public interface CourseInfoService extends Service<CourseInfo> {
 
     int getNumByTeacherNameAndCourseName(String teacherName, String courseName);
 
-    CourseInfo getByTeacherNameAndCourseName(String teacherName, String courseName);
+    List<CourseInfo> getByTeacherNameAndCourseName(String teacherName, String courseName);
 
     void dbProcess(List<CourseInfo> courseInfoList);
+
+    int updateCourseCredit(CourseInfo courseInfo);
 }
