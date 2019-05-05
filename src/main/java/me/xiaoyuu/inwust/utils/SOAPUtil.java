@@ -1,5 +1,8 @@
 package me.xiaoyuu.inwust.utils;
 
+import com.alibaba.fastjson.JSONArray;
+import me.xiaoyuu.inwust.dto.GradeInfo;
+
 import javax.xml.soap.*;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -59,14 +62,15 @@ public class SOAPUtil {
         return SOAPConnectionFactory.newInstance().createConnection().call(request, TEACHING_SYSTEM_URL);
     }
 
-    public static String getStudentGradeJSON(String studentId) throws SOAPException {
+    public static List<GradeInfo> getStudentGradeList(String studentId) throws SOAPException {
         List<String> params = new ArrayList<>();
         params.add(studentId);
         params.add(TIME_STAMP);
         params.add(HASH);
         SOAPMessage request = getSOAPRequest(params, "getxscj");
         SOAPMessage response = getSOAPResponse(request);
-        return response.getSOAPBody().getFirstChild().getFirstChild().getTextContent();
+        String json =  response.getSOAPBody().getFirstChild().getFirstChild().getTextContent();
+        return JSONArray.parseArray(json,GradeInfo.class);
     }
 
     public static String getChosenCourseJSON(String studentId, String semester) throws SOAPException {
@@ -84,7 +88,8 @@ public class SOAPUtil {
 
         try {
             //  System.out.println(getStudentGradeJSON("201713137042"));
-            System.out.println(getChosenCourseJSON("201713137042", "2017-2018-1"));
+            //System.out.println(getChosenCourseJSON("201713137042", "2017-2018-1"));
+            System.out.println(getStudentGradeList("201713137005"));
         } catch (SOAPException e) {
             e.printStackTrace();
         }
